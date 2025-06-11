@@ -54,12 +54,12 @@ class AddGoalDialog(QDialog):
         super().showEvent(event)
 
     def update_selected_date(self):
-        """Обновляет выбранную дату в метке."""
+        # Обновляет выбранную дату в метке
         selected_date = self.calendar.selectedDate()
         self.selected_date_label.setText(selected_date.toString("dd.MM.yyyy"))
 
     def get_data(self):
-        """Возвращает введенные данные."""
+        # Возвращает введенные данные
         return {
             "title": self.title_input.text(),
             "target_amount": self.target_amount_input.text(),
@@ -121,7 +121,7 @@ class GoalsTab(QWidget):
         super().showEvent(event)
 
     def load_goals(self):
-        """Загружает цели из базы данных и отображает их в таблице."""
+        # Загружает цели из базы данных и отображает их в таблице
         try:
             self.table.setRowCount(0)
             for goal in Goal.select():
@@ -135,7 +135,7 @@ class GoalsTab(QWidget):
             print(f"Ошибка при загрузке целей: {e}")
 
     def show_add_goal_dialog(self):
-        """Показывает диалог для добавления цели."""
+        # Окно добавления цели
         dialog = AddGoalDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             try:
@@ -162,7 +162,7 @@ class GoalsTab(QWidget):
         menu.exec(self.table.viewport().mapToGlobal(position))
 
     def delete_selected_goal(self):
-        """Удаляет выбранную цель."""
+        # Удаляет выбранную цель
         selected_row = self.table.currentRow()
         if selected_row >= 0:
             goal_id = Goal.select()[selected_row].id
@@ -214,7 +214,7 @@ class AddTransactionDialog(QDialog):
         self.fade_animation.setEndValue(1)
 
     def update_selected_date(self):
-        """Обновляет выбранную дату в метке."""
+        # Обновляет выбранную дату в метке
         selected_date = self.calendar2.selectedDate()
         self.select_date.setText(selected_date.toString("dd.MM.yyyy"))
 
@@ -223,7 +223,7 @@ class AddTransactionDialog(QDialog):
         super().showEvent(event)
 
     def get_data(self):
-        """Возвращает введенные данные."""
+        # Возвращает введенные данные
         return {
             "Сумма": self.amount_input.text(),
             "Категория": self.category_input.text(),
@@ -270,7 +270,7 @@ class TransactionsTab(QWidget):
         super().showEvent(event)
 
     def load_transactions(self):
-        """Загружает операции из базы данных и отображает их в таблице."""
+        # Загружает операции из базы данных и отображает их в таблице
         try:
             self.table.setRowCount(0)
             for transaction in Transaction.select():
@@ -284,7 +284,7 @@ class TransactionsTab(QWidget):
             print(f"Ошибка при загрузке операций: {e}")
 
     def show_add_transaction_dialog(self):
-        """Показывает диалог для добавления операции."""
+        # Показывает диалог для добавления операции
         dialog = AddTransactionDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             try:
@@ -303,14 +303,14 @@ class TransactionsTab(QWidget):
                 QMessageBox.critical(self, "Ошибка", f"Не удалось добавить операцию: {e}")
 
     def show_context_menu(self, position):
-        """Показывает контекстное меню для таблицы операций."""
+        # Показывает контекстное меню для таблицы операций
         menu = QMenu(self)
         delete_action = menu.addAction("Удалить операцию")
         delete_action.triggered.connect(self.delete_selected_transaction)
         menu.exec(self.table.viewport().mapToGlobal(position))
 
     def delete_selected_transaction(self):
-        """Удаляет выбранную операцию."""
+        # Удаляет выбранную операцию
         selected_row = self.table.currentRow()
         if selected_row >= 0:
             transaction_id = Transaction.select()[selected_row].id
@@ -376,7 +376,7 @@ class AnalyticsTab(QWidget):
         super().showEvent(event)
 
     def update_chart(self):
-        """Обновляет график в зависимости от выбранного типа."""
+        # Обновляет график
         self.figure.clear()
         chart_type = self.chart_type.currentText()
         
@@ -390,7 +390,7 @@ class AnalyticsTab(QWidget):
         self.canvas.draw()
 
     def create_pie_chart(self):
-        """Создает круговую диаграмму по категориям расходов."""
+        # Создает круговую диаграмму по категориям расходов
         try:
             query = Transaction.select().where(Transaction.type == "Расход")
             df = pd.DataFrame([{"Категории": t.category, "amount": t.amount} for t in query])
@@ -405,7 +405,7 @@ class AnalyticsTab(QWidget):
             QMessageBox.critical(self, "Ошибка", str(e))
 
     def create_bar_chart(self):
-        """Создает столбчатую диаграмму доходов/расходов по категориям."""
+        # Создает столбчатую диаграмму доходов/расходов по категориям
         try:
             query = Transaction.select()
             df = pd.DataFrame([{
@@ -424,7 +424,7 @@ class AnalyticsTab(QWidget):
             QMessageBox.critical(self, "Ошибка", str(e))
 
     def create_line_chart(self):
-        """Создает линейный график доходов/расходов по датам."""
+        # Создает линейный график доходов/расходов по датам
         try:
             query = Transaction.select()
             df = pd.DataFrame([{
@@ -447,7 +447,7 @@ class AnalyticsTab(QWidget):
             QMessageBox.critical(self, "Ошибка", str(e))
 
     def export_to_excel(self):
-        """Экспортирует все транзакции в Excel."""
+        # Экспортирует все транзакции в Excel
         try:
             query = Transaction.select()
             df = pd.DataFrame([{
@@ -464,7 +464,7 @@ class AnalyticsTab(QWidget):
             QMessageBox.critical(self, "Ошибка", f"Не удалось экспортировать данные: {e}")
 
     def export_chart(self):
-        """Сохраняет текущий график в файл."""
+        # Сохраняет текущий график в файл
         try:
             path, _ = QFileDialog.getSaveFileName(self, "Сохранить график", "", "PNG Files (*.png);;PDF Files (*.pdf)")
             if path:

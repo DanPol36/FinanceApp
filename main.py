@@ -18,7 +18,6 @@ class MainWindow(QMainWindow):
         
 
     def init_ui(self):
-        """Создание элементов интерфейса"""
         # Создаем вкладки
         self.tabs = QTabWidget()
         self.tabs.setTabPosition(QTabWidget.TabPosition.North)
@@ -35,7 +34,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.tabs)
 
     def showEvent(self, event):
-        """Запуск анимации при показе окна"""
+        # Запуск анимации при показе окна
         super().showEvent(event)
 
 if __name__ == "__main__":
